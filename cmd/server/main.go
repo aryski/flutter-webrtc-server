@@ -34,22 +34,14 @@ func main() {
 	signaler := signaler.NewSignaler(turn)
 	wsServer := websocket.NewWebSocketServer(signaler.HandleNewWebSocket, signaler.HandleTurnServerCredentials)
 
-	sslCert := cfg.Section("general").Key("cert").String()
-	sslKey := cfg.Section("general").Key("key").String()
 	bindAddress := cfg.Section("general").Key("bind").String()
-
-	port, err := cfg.Section("general").Key("port").Int()
-	if err != nil {
-		port = 8086
-	}
+	port := 8086
 
 	htmlRoot := cfg.Section("general").Key("html_root").String()
 
 	config := websocket.DefaultConfig()
 	config.Host = bindAddress
 	config.Port = port
-	config.CertFile = sslCert
-	config.KeyFile = sslKey
 	config.HTMLRoot = htmlRoot
 
 	wsServer.Bind(config)
